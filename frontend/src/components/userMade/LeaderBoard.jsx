@@ -1,5 +1,4 @@
-import { Label } from '@radix-ui/react-label';
-import { Input } from "@/components/ui/input"
+
 import { TbRefresh } from "react-icons/tb";
 import React, { useEffect, useState } from 'react'
 
@@ -13,14 +12,11 @@ import {
   } from "@/components/ui/card"
 
 
-import { Textarea } from '../ui/textarea';
-import { Button } from '../ui/button';
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 import { IoTimerOutline } from "react-icons/io5";
 import axios from 'axios';
 
-import { Bounce, toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from "@/AuthContext";
 
@@ -97,11 +93,11 @@ const LeaderBoard = () => {
         </CardHeader>   
     <CardContent className='h-[30vw] overflow-y-scroll'>
 
-            {/* ek to yeh , no battles active */}
+            {/* ek to yeh , no participants active */}
 
 {battles && battles.length > 0 ? (
     battles.map((battle, index) => (
-        <Card key={index} className='flex flex-col p-[1vw] mb-[1vw] hover:cursor-pointer active:scale-[0.98] hover:scale-[0.99] transition-all duration-100 hover:bg-gray-50'>
+        <Card key={index} className='flex flex-col p-[1vw] mb-[1vw] drop-shadow-none'>
             <div className='flex justify-end'>
                 <div className='absolute flex font-bold items-center justify-center'>
                     <IoTimerOutline className='' />

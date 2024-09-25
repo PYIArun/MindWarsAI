@@ -68,14 +68,14 @@ const CreateBattle = () => {
                 timeLimit :timeLimit,
                 difficulty :difficulty,
                 creatorUsername :creatorUsername,
+                deadline: deadline,
             });
             if (response.status === 201) {
                 alert('Battle created successfully!');
                 console.log(response.data.battle_id);
-
-                navigate(`/waiting-room/${response.data.battle_id}`);
+                navigate('/joinbattle')
             } else {
-                alert('hat bencho! Failed to create battle');
+                alert('Failed to create battle');
             }
         } catch (error) {
             console.error('Error creating battle:', error);
@@ -149,9 +149,9 @@ const CreateBattle = () => {
                                             <SelectValue placeholder="Select difficulty level" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="beginner">Beginner</SelectItem>
-                                            <SelectItem value="intermediate">Intermediate</SelectItem>
-                                            <SelectItem value="advanced">Advanced</SelectItem>
+                                            <SelectItem value="Beginner">Beginner</SelectItem>
+                                            <SelectItem value="Intermediate">Intermediate</SelectItem>
+                                            <SelectItem value="Advanced">Advanced</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

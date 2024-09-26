@@ -16,6 +16,8 @@ import { Bounce, ToastContainer } from 'react-toastify';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import LeaderBoard from './components/userMade/LeaderBoard';
+import QuizPage from './components/userMade/QuizPage';
+import ResultQuiz from './components/userMade/ResultQuiz';
 const App = () => { 
   const { login, logout, isAuthenticated } = useAuth();
   const [identifier, setIdentifier] = useState('');
@@ -126,6 +128,8 @@ transition= {Bounce}
           <Route path="/createbattle" element={<PrivateRoute element={<CreateBattle/>}/>}/>
           <Route path="/joinbattle" element={<PrivateRoute element={<JoinBattle/>}/>}/>
           <Route path="/leaderboard" element={<PrivateRoute element={<LeaderBoard/>}/>}/>
+          <Route path="/quiz/:quiz_id" element={<PrivateRoute element={<QuizPage/>}/>}/>
+          <Route path="/result/:quiz_id/:username" element={<PrivateRoute element={<ResultQuiz/>}/>}/>
         </Routes>
 
       {/*  */}

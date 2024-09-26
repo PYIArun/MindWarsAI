@@ -54,6 +54,7 @@ def signup():
     })
     return jsonify({"message": "User registered successfully"}), 201
 
+
 @app.route('/login', methods=['POST'])
 def login():
     identifier = request.json['identifier']  # Can be username or email
@@ -67,7 +68,6 @@ def login():
         token = jwt.encode({
             'user_id': str(user['_id']),
             'username': user['username'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)  
         }, SECRET_KEY, algorithm='HS256')
 
         return jsonify({"message": "Login successful", "token": token, "username": user['username']}), 200
@@ -96,6 +96,7 @@ def get_battles():
         battle_list = []
         for battle in battles:
             battle_list.append({
+                "id" : battle.get("quiz_id"),
                 "title": battle.get("quiz_name"),
                 "description": battle.get("quiz_description"),
                 "num_questions": battle.get("num_of_questions"),
@@ -146,7 +147,7 @@ def create_battle():
             "quiz_name": battle_name,
             "quiz_description": battle_description,
             "num_of_questions": num_questions,
-            "time_limit": f"{time_limit} min",
+            "time_limit": time_limit,
             "difficulty": difficulty,
             "created_at": created_at,
             "creator_username": creator_username,
@@ -174,9 +175,6 @@ def create_battle():
         mongo.db.quizzes.insert_one(quiz_data)
         # my_collection.insert_one(quiz_data)
 
-        print(quiz_data)
-
-
         # Insert quiz data into MongoDB
         # print(f"Inserted quizdata: {quiz_data}")
         # print(f"Inserted quiz questions: {quiz_questions}")
@@ -188,97 +186,43 @@ def create_battle():
         return jsonify({"error": str(e)}), 500
 
 
+from bson import ObjectId
 
+@app.route('/api/quiz/<quiz_id>', methods=['GET'])
+def get_quiz(quiz_id):
+    quiz = mongo.db.quizzes.find_one({"quiz_id": quiz_id})
+    if quiz:
+        # Function to convert ObjectId fields to strings
+        def convert_objectid(obj):
+            if isinstance(obj, ObjectId):
+                return str(obj)
+            return obj
 
-# @app.route('/api/create_battle', methods=['POST'])
-# def create_battle():
-#     # Get the data from the request
-#     print("Battle function called!")
-#     battle_data = request.json
+        # Create a new dictionary to store converted values
+        quiz = {k: convert_objectid(v) for k, v in quiz.items()}
 
-#     # Extract individual fields from the request data
-#     battle_name = battle_data.get('battleName')
-#     battle_description = battle_data.get('battleDescription')
-#     num_questions = battle_data.get('numQuestions')
-#     time_limit = battle_data.get('timeLimit')
-#     difficulty = battle_data.get('difficulty')
-#     creator_username = battle_data.get('creatorUsername')  # Get the creator's username
-#     # Validate the received data
-#     if not battle_name or not battle_description or not num_questions or not time_limit:
-#         return jsonify({"message": "Missing required fields"}), 400
-    
-#     battle_id = str(uuid.uuid4())  # Create a unique random ID
-#     # Create a battle object to be stored in the MongoDB
-#     battle = {
-#         'battleid': battle_id,
-#         'battleName': battle_name,
-#         'battleDescription': battle_description,
-#         'numQuestions': num_questions,
-#         'timeLimit': time_limit,
-#         'difficulty': difficulty,
-#         'created_at': datetime.datetime.utcnow(),
-#         'creator_username' : creator_username,
-#         'status': 'waiting_for_opponent',  # Initial status of the battle
-#         'opponent_id': None  # No opponent yet
-#     }
-#     # Insert the battle object into the 'battles' collection
-#     try:
-#         # if mongo.db.battles.find_one({'battleid': battle_id}):
-#             # return jsonify({"message": "Battle ID already exists"}), 400
-        
-#         mongo.db.battles.insert_one(battle)
-#         print(f"Inserted Battle: {battle}")  # Log the inserted battle
-         
-#         # 30 for 30 seconds, 300 for 5 minutes
-#         #  
-#         Timer(300, discard_battle, [battle_id]).start()  # Discard the battle after 5 minutes
-#     except Exception as e:
-#         print("Insert failed:", e)
-#         return jsonify({"message": "Failed to create battle"}), 500
-#     # Return the battle ID in the response
-#     return jsonify({
-#         "message": "Battle created successfully",
-#         "battle_id": battle_id
-#     }), 201
+        return jsonify(quiz), 200
+    return jsonify({"error": "Quiz not found"}), 404
 
-# def discard_battle(battle_id):
-#     result = mongo.db.battles.delete_one({'battleid': battle_id})
-#     if result.deleted_count > 0:
-#         print(f"Battle {battle_id} discarded due to timeout.")
-#     else:
-#         print(f"Battle {battle_id} not found or already discarded.")
+@app.route('/api/quiz/<quiz_id>/submit', methods=['POST'])
+def submit_quiz(quiz_id):
+    data = request.get_json()
+    username = data.get("username")
+    score = data.get("score")
+    time_taken = data.get("time_taken")
 
-# @app.route('/api/check_battle_status/<battle_id>', methods=['GET'])
-# def check_battle_status(battle_id):
-#     battle = mongo.db.battles.find_one({'battleid': battle_id})
-    
-#     if not battle:
-#         return jsonify({"message": "Battle not found", "status": "discarded"}), 404
-    
-#     return jsonify({
-#         "message": "Battle found",
-#         "status": battle['status']
-#     }), 200
+    # Find the quiz and update the user's score
+    quiz = mongo.db.quizzes.find_one({"quiz_id": quiz_id})
+    if quiz:
+        # Update or insert user details into users_attempted array
+        mongo.db.quizzes.update_one(
+            {"quiz_id": quiz_id, "users_attempted.username": {"$ne": username}},
+            {"$addToSet": {"users_attempted": {"username": username, "score": score, "time_completition": time_taken}}},
+            upsert=True
+        )
+        return jsonify({"message": "Quiz submitted successfully"}), 200
+    return jsonify({"error": "Quiz not found"}), 404
 
-
-
-# @app.route('/api/finish_battle/<battle_id>', methods=['POST'])
-# def finish_battle(battle_id):
-#     # Find the battle
-#     battle = mongo.db.battles.find_one({'_id': ObjectId(battle_id)})
-    
-#     if not battle:
-#         return jsonify({"message": "Battle not found"}), 404
-
-#     # Update the status to 'completed'
-#     mongo.db.battles.update_one(
-#         {'_id': ObjectId(battle_id)},
-#         {'$set': {
-#             'status': 'completed'
-#         }}
-#     )
-
-#     return jsonify({"message": "Battle completed successfully"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

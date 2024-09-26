@@ -80,6 +80,10 @@
 
         }
 
+        const handleJoinButton = (battleId) => {
+            navigate(`/quiz/${battleId}`); // Navigating to the quiz page with the battle ID
+        };
+
         return (
             // <h2 className="text-[4vw] font-bold text-[#3565EC]">Create a<span className='text-yellow-500'> Battle</span></h2>
             <div className="max-w-screen">
@@ -147,6 +151,7 @@
                                         <h2 className='text-[1vw]'>Deadline: {new Date(battle.deadline).toLocaleString() || 'N/A'}</h2>
                                         <Button onClick={(e) => {
                                             e.stopPropagation(); // Prevent the card's click handler from being triggered
+                                            handleJoinButton(battle.id);
                                             // Add your join logic here
                                         }} className='bg-[#F47F2F] px-[1.5vw] py-[0.2vw] rounded-full'>Join</Button>
                                     </div>

@@ -204,6 +204,17 @@ def get_quiz(quiz_id):
         return jsonify(quiz), 200
     return jsonify({"error": "Quiz not found"}), 404
 
+
+@app.route('/api/quiz/<quiz_id>/attempted/<username>', methods=['GET'])
+def check_quiz_attempted(quiz_id, username):
+    quiz = mongo.db.quizzes.find_one({"quiz_id": quiz_id})
+    if quiz:
+        # Check if the username is in the users_attempted array
+        attempted = any(user['username'] == username for user in quiz.get('users_attempted', []))
+        return jsonify({"attempted": attempted}), 200
+    return jsonify({"attempted": False}), 404
+
+
 @app.route('/api/quiz/<quiz_id>/submit', methods=['POST'])
 def submit_quiz(quiz_id):
     data = request.get_json()

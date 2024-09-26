@@ -32,6 +32,7 @@
 
         const {isAuthenticated} = useAuth();
         const navigate = useNavigate();
+        const username = localStorage.getItem('username');  // Get the username from local storage
 
         useEffect(() => {
             const fetchBattles = async () => {
@@ -48,6 +49,8 @@
         }, []);
         
         const notify = () => toast("Page refreshed!");
+        const notifyJoin = () => toast("You have already attempted the quiz!");
+
         const handleRefreshButton = async ()=>{
             try {
                 const response = await axios.get('http://localhost:5000/api/battles');
@@ -80,10 +83,22 @@
 
         }
 
-        const handleJoinButton = (battleId) => {
-            navigate(`/quiz/${battleId}`); // Navigating to the quiz page with the battle ID
-        };
+        const handleJoinButton = async (battleId) => {
 
+            try {
+                // Check if the user has already attempted the quiz
+                const response = await axios.get(`http://localhost:5000/api/quiz/${battleId}/attempted/${username}`);
+                
+                if (response.data.attempted) {
+                    notifyJoin();
+                } else {
+                    navigate(`/quiz/${battleId}`); // Proceed to the quiz page
+                }
+            } catch (error) {
+                console.error("Error checking quiz attempt:", error);
+                // Handle error (optional)
+            }
+        };
         return (
             // <h2 className="text-[4vw] font-bold text-[#3565EC]">Create a<span className='text-yellow-500'> Battle</span></h2>
             <div className="max-w-screen">

@@ -28,7 +28,7 @@ const Timer = ({ initialTime }) => {
 
   return (
     <div className='absolute right-5 top-5'>
- <div className="relative w-52 h-52 flex justify-center items-center">
+ <div className="relative w-[30vw] h-[34vw] flex justify-center items-center">
       <svg width="200" height="200">
         <circle
           className="fill-none stroke-gray-300"

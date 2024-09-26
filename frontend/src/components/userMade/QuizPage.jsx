@@ -73,16 +73,16 @@ const QuizPage = () => {
             return () => clearInterval(timerId); // Cleanup on component unmount
         }
     }, [quizStarted, timerLimit]);
-    
+
     return (
-        <div className='h-[40vw] relative'>
+        <div className='h-[40vw] relative '>
             {quizStarted &&
                 <Timer initialTime={timerLimit} />
             }
 
             {currentQuestionIndex < questions.length ? (
-                <div>
-                    <div>
+                <div className='flex justify-start w-[70%] flex-col pl-[1vw] pt-[3vw]'>
+                    <div className=''>
                         
                         <h2 className="pt-[5vw] text-center text-4xl font-semibold transition-transform duration-300 transform hover:scale-105 ">
                             {questions[currentQuestionIndex].question}

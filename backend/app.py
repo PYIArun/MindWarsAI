@@ -6,7 +6,7 @@ import jwt
 import datetime
 from bson import ObjectId
 import uuid
-from threading import Timer
+import threading
 from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
@@ -16,6 +16,7 @@ load_dotenv()
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
 from educhain import Educhain, LLMConfig
+
 
 
 app = Flask(__name__)
@@ -89,6 +90,8 @@ def protected():
     except jwt.InvalidTokenError:
         return jsonify({"message": "Invalid token!"}), 401
 
+from datetime import datetime
+
 @app.route('/api/battles', methods=['GET'])
 def get_battles():
     try:
@@ -96,18 +99,28 @@ def get_battles():
         battle_list = []
         for battle in battles:
             battle_list.append({
-                "id" : battle.get("quiz_id"),
+                "id": battle.get("quiz_id"),
                 "title": battle.get("quiz_name"),
                 "description": battle.get("quiz_description"),
                 "num_questions": battle.get("num_of_questions"),
                 "time": battle.get("time_limit"),
                 "username": battle.get("creator_username"),
                 "deadline": battle.get("deadline"),
+                "created_at": battle.get("created_at")  # This is already a datetime object
             })
-        return jsonify(battle_list)
+
+        # Sort the battle_list by 'created_at' in descending order
+        sorted_battle_list = sorted(
+            battle_list, 
+            key=lambda x: x['created_at'], 
+            reverse=True  # Descending order
+        )
+
+        return jsonify(sorted_battle_list)
     except Exception as e:
         print(e)
-        return jsonify({"error": str(e)}), 500  # Return a more descriptive error message
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/api/create_battle', methods=['POST'])
 def create_battle():
@@ -234,6 +247,40 @@ def submit_quiz(quiz_id):
         return jsonify({"message": "Quiz submitted successfully"}), 200
     return jsonify({"error": "Quiz not found"}), 404
 
+@app.route('/api/leaderboard', methods=['GET'])
+def get_leaderboard():
+    leaderboard = mongo.db.quizzes.aggregate([
+        {"$unwind": "$users_attempted"},
+        {"$sort": {"users_attempted.score": -1}},
+        {"$project": {
+            "_id": 0,  # Exclude the default MongoDB _id field
+            "username": "$users_attempted.username",
+            "score": "$users_attempted.score",
+            "time_taken": "$users_attempted.time_completition"
+        }}
+    ])
+
+    # Convert the cursor to a list and ensure ObjectId is serialized properly
+    leaderboard_list = []
+    for entry in leaderboard:
+        leaderboard_list.append({
+            "username": entry.get("username"),
+            "score": entry.get("score"),
+            "time_taken": entry.get("time_taken")
+        })
+
+    return jsonify(leaderboard_list)
+
+def delete_expired_quizzes():
+    current_time = datetime.utcnow()
+    mongo.db.quizzes.delete_many({"deadline": {"$lt": current_time}})
+
+def run_periodic_cleanup():
+    delete_expired_quizzes()
+    threading.Timer(10, run_periodic_cleanup).start()  # Run every 10 seconds
+
+# Start the periodic cleanup when the app runs
+run_periodic_cleanup()
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -24,6 +24,7 @@ import axios from 'axios';  // Assuming you're using Axios to make API requests
 
 
 import { useAuth } from "@/AuthContext";
+import Loading from '../loading/Loading';
 
 
 
@@ -38,6 +39,7 @@ const CreateBattle = () => {
     const {isAuthenticated} = useAuth();
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(false); // Add loading state
     
     const handleBackButton = () => {
         if(!isAuthenticated){
@@ -59,6 +61,8 @@ const CreateBattle = () => {
             return;
         }
 
+        setLoading(true);
+
         // Battle creation logic (API request to backend)
         try {
             const response = await axios.post('http://localhost:5000/api/create_battle', {
@@ -71,7 +75,6 @@ const CreateBattle = () => {
                 deadline: deadline,
             });
             if (response.status === 201) {
-                alert('Battle created successfully!');
                 console.log(response.data.battle_id);
                 navigate('/joinbattle')
             } else {
@@ -80,12 +83,21 @@ const CreateBattle = () => {
         } catch (error) {
             console.error('Error creating battle:', error);
             alert('An error occurred while creating the battle.');
+        } finally{
+            setLoading(false);
         }
     }
 
     return (
         <div className="max-w-screen">
-
+            
+            {loading && (
+                // Loading spinner overlay
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                    <Loading type="bars" color="#3565EC" />
+                </div>
+            )}
+            
             <div className='flex h-[43vw] my-[1vw]'>
                 <div className='w-[50%] h-full relative'>
                     <div onClick={handleBackButton} className='p-4 active:scale-105 rounded-full transition-all hover:ease-in duration-150 hover:bg-gray-100 text-[2vw] absolute'>

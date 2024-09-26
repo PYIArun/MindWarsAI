@@ -39,7 +39,7 @@
                 try {
                     const response = await axios.get('http://localhost:5000/api/battles');
                     console.log(response.data)
-                    setBattles(response.data);
+                    setBattles(response.data); 
                 } catch (error) {
                     console.error('Error fetching battles:', error);
                 }

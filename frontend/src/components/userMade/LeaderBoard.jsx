@@ -108,7 +108,7 @@ const LeaderBoard = () => {
                         </div>
                       </div>
                       <div className="flex flex-col justify-between">
-                        <div className="flex  font-bold items-center justify-center">
+                        <div className="flex w-[120%]  font-bold items-center justify-end pr-[1vw]">
                           <IoTimerOutline className="" />
                           <h2>{user.time_taken} secs</h2>
                         </div>

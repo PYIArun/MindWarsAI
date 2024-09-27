@@ -21,7 +21,7 @@ from educhain import Educhain, LLMConfig
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Your MongoDB URI
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")

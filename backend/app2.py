@@ -91,7 +91,7 @@ def submit_quiz():
     score = data.get('score')
     time_completion = data.get('time_completion')
 
-    quiz = quiz_collection.find_one({"QuizId": quiz_id})
+    quiz = mongo.db.quizzes.find_one({"QuizId": quiz_id})
 
     if quiz:
         user_attempt = {
@@ -100,7 +100,7 @@ def submit_quiz():
             "TimeCompletion": time_completion,
             "HasPlayed": True
         }
-        quiz_collection.update_one(
+        quiz.update_one(
             {"QuizId": quiz_id},
             {"$push": {"UsersAttempted": user_attempt}}
         )

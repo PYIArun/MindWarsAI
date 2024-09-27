@@ -34,6 +34,9 @@
         const navigate = useNavigate();
         const username = localStorage.getItem('username');  // Get the username from local storage
 
+
+
+
         useEffect(() => {
             const fetchBattles = async () => {
                 try {
@@ -85,6 +88,7 @@
 
         const handleJoinButton = async (battleId) => {
 
+
             try {
                 // Check if the user has already attempted the quiz
                 const response = await axios.get(`http://localhost:5000/api/quiz/${battleId}/attempted/${username}`);
@@ -93,15 +97,18 @@
                     notifyJoin();
                 } else {
                     navigate(`/quiz/${battleId}`); // Proceed to the quiz page
-                }
+                } 
             } catch (error) {
                 console.error("Error checking quiz attempt:", error);
                 // Handle error (optional)
-            }
+            } 
         };
         return (
             // <h2 className="text-[4vw] font-bold text-[#3565EC]">Create a<span className='text-yellow-500'> Battle</span></h2>
             <div className="max-w-screen">
+
+          
+            
                             <ToastContainer
                 position="bottom-left"
                 autoClose={3000}
@@ -163,7 +170,7 @@
                                     </div>
                                     <div className='flex justify-between items-center'>
                                         
-                                        <h2 className='text-[1vw]'>Deadline: {new Date(battle.deadline).toLocaleString() || 'N/A'}</h2>
+                                        <h2 className='text-[1vw]'>Ends at: {new Date(battle.deadline).toLocaleString() || 'N/A'}</h2>
                                         <Button onClick={(e) => {
                                             e.stopPropagation(); // Prevent the card's click handler from being triggered
                                             handleJoinButton(battle.id);
@@ -174,7 +181,7 @@
                             ))
                         ) : (
                             <Card className='flex justify-center items-center'>
-                                <h2 className='text-[1vw]'>No Active Battles!</h2>
+                                <h2 className='text-[1vw]'>No Active Contests!</h2>
                             </Card>
                         )}
 

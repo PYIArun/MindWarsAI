@@ -70,7 +70,6 @@ const CreateBattle = () => {
                 battleDescription :battleDescription,
                 numQuestions :numQuestions,
                 timeLimit :timeLimit,
-                difficulty :difficulty,
                 creatorUsername :creatorUsername,
                 deadline: deadline,
             });
@@ -110,7 +109,7 @@ const CreateBattle = () => {
                 </div>
 
                 <div className='w-[50%] flex justify-center'>
-                    <Card className='w-[80%] h-full border-none drop-shadow-none'>
+                    <Card className='w-[80%] h-[40vw] border-none drop-shadow-none'>
                         <CardHeader>
                             <CardTitle className='text-[2vw]'>Enter the following details for a battle</CardTitle>
                             <CardDescription>Make sure to fill valid values</CardDescription>
@@ -150,7 +149,7 @@ const CreateBattle = () => {
                                     />
                                 </div>
 
-                                <div>
+                                {/* <div>
                                     <Label htmlFor="difficulty" className='drop-shadow-sm'>Level of Difficulty</Label>
                                     <Select
                                         value={difficulty}  // Set the difficulty state
@@ -166,7 +165,7 @@ const CreateBattle = () => {
                                             <SelectItem value="Advanced">Advanced</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                </div>
+                                </div> */}
 
                                 <div>
                                     <Label htmlFor="timelimit" className='drop-shadow-sm'>Set the time duration of quiz (in minutes)</Label>

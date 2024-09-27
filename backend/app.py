@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 load_dotenv()
 
 # generating ai libraries
+import google.generativeai as genai
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
 from educhain import Educhain, LLMConfig
@@ -132,15 +133,15 @@ def create_battle():
         battle_description = data['battleDescription']
         num_questions = data['numQuestions']
         time_limit = data['timeLimit']
-        difficulty = data['difficulty']
         creator_username = data['creatorUsername']
         deadline_hours = data['deadline']
 
-       
+
+        prompt = battle_name + '' + battle_description
         print("Hello hello x1")
         # Generate AI-powered questions using Educhain
         quiz_questions = educhain_client.qna_engine.generate_questions(
-            topic=battle_name,
+            topic=prompt,
             num=num_questions,
 
         )
@@ -161,7 +162,6 @@ def create_battle():
             "quiz_description": battle_description,
             "num_of_questions": num_questions,
             "time_limit": time_limit,
-            "difficulty": difficulty,
             "created_at": created_at,
             "creator_username": creator_username,
             "deadline": deadline,
@@ -186,12 +186,7 @@ def create_battle():
         # Now quiz_data is ready to be inserted into MongoDB
         # Example of inserting into MongoDB (assuming you have a collection defined)
         mongo.db.quizzes.insert_one(quiz_data)
-        # my_collection.insert_one(quiz_data)
 
-        # Insert quiz data into MongoDB
-        # print(f"Inserted quizdata: {quiz_data}")
-        # print(f"Inserted quiz questions: {quiz_questions}")
-        # Return the quiz ID to the frontend
         return jsonify({"battle_id": quiz_id}), 201
 
     except Exception as e:
@@ -235,17 +230,148 @@ def submit_quiz(quiz_id):
     score = data.get("score")
     time_taken = data.get("time_taken")
 
-    # Find the quiz and update the user's score
     quiz = mongo.db.quizzes.find_one({"quiz_id": quiz_id})
+        
+    noOfQuestions = len(quiz.get('questions', []))
+    # Find the quiz
+    quiztitle = quiz.get('quiz_name') + ' ' + quiz.get('quiz_description')
+    genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    prompt = f"The learner completed a quiz on the topic of {quiztitle} and scored {score} out of {noOfQuestions}. Based on this score. Provide a feedback and encouragement on that score. Additionally, provide a brief feedback summary in fixed 200 words and a personalized learning path with 2-3 key resources (links to articles, videos, or exercises) to improve their knowledge. The response should only include the following: A concise feedback message, and a learning path with a list of URLs. Also wrap the links in anchor <a className='text-blue'></a>"
+    response = model.generate_content(prompt)
     if quiz:
-        # Update or insert user details into users_attempted array
-        mongo.db.quizzes.update_one(
-            {"quiz_id": quiz_id, "users_attempted.username": {"$ne": username}},
-            {"$addToSet": {"users_attempted": {"username": username, "score": score, "time_completition": time_taken}}},
-            upsert=True
-        )
+        # Check if the user already exists in users_attempted
+        user_found = any(user['username'] == username for user in quiz.get('users_attempted', []))
+
+        if user_found:
+            # User exists, so update their score and time taken
+            result = mongo.db.quizzes.update_one(
+                {"quiz_id": quiz_id, "users_attempted.username": username},
+                {
+                    "$set": {
+                        "users_attempted.$.score": score,
+                        "users_attempted.$.time_completition": time_taken,
+                        "users_attempted.$.personalized_feedback":response.text
+                    }
+                }
+            )
+        else:
+            # User does not exist, so create a new entry in users_attempted
+            new_user_attempt = {
+                "username": username,
+                "score": score,
+                "time_completition": time_taken,
+                "question_attempted": []  # Initialize as empty or populate if needed
+            }
+            result = mongo.db.quizzes.update_one(
+                {"quiz_id": quiz_id},
+                {
+                    "$addToSet": {
+                        "users_attempted": new_user_attempt
+                    }
+                }
+            )
+
+        # Check if any document was modified
+        if result.modified_count == 0:
+            return jsonify({"error": "No matching quiz or user found"}), 404
+
         return jsonify({"message": "Quiz submitted successfully"}), 200
     return jsonify({"error": "Quiz not found"}), 404
+
+@app.route('/api/questionattempted/', methods=['POST'])
+def question_attempted():
+    try:
+        data = request.json
+        quiz_id = data.get('quiz_id')
+        username = data.get('username')
+        question = data.get('question')
+        correct_answer = data.get('correctAnswer')
+        user_answer = data.get('userAnswer')
+        explanation = data.get('explanation')
+        
+        # Create the question_attempt object
+        attempt = {
+            "question": question,
+            "correct_answer": correct_answer,
+            "user_answer": user_answer,
+            "explanation": explanation,
+        }
+
+        # Find the quiz by quiz_id
+        quiz = mongo.db.quizzes.find_one({"quiz_id": quiz_id})
+
+        if not quiz:
+            return jsonify({"error": "Quiz not found"}), 404
+
+        # Check if the user already exists in users_attempted
+        user_found = any(user['username'] == username for user in quiz.get('users_attempted', []))
+
+        if user_found:
+            # User exists, so update their question_attempted
+            result = mongo.db.quizzes.update_one(
+                {
+                    "quiz_id": quiz_id,
+                    "users_attempted.username": username
+                },
+                {
+                    "$push": {
+                        "users_attempted.$.question_attempted": attempt
+                    }
+                }
+            )
+        else:
+            # User does not exist, so create a new entry in users_attempted
+            new_user_attempt = {
+                "username": username,
+                "question_attempted": [attempt]
+            }
+            result = mongo.db.quizzes.update_one(
+                {"quiz_id": quiz_id},
+                {
+                    "$addToSet": {
+                        "users_attempted": new_user_attempt
+                    }
+                }
+            )
+
+        if result.modified_count == 0:
+            return jsonify({"error": "No matching quiz or user found"}), 404
+
+        return jsonify({"message": "Question attempt recorded successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+@app.route('/api/quiz/<quiz_id>/user_score', methods=['GET'])
+def get_user_score(quiz_id):
+    # Fetch the quiz data from the database
+    quiz = mongo.db.quizzes.find_one({"quiz_id": quiz_id})
+    if not quiz:
+        return jsonify({"error": "Quiz not found"}), 404
+
+    username = request.args.get("username")
+    
+    noOfQuestions = len(quiz.get('questions', []))
+    # Get the user's score, time completion, and attempted questions
+    for user in quiz['users_attempted']:
+        if user['username'] == username:
+            user_data = {
+                "username": user['username'],
+                "score": user['score'],
+                "time_completion": user['time_completition'],  # Assuming this field is named correctly
+                "questions": user.get('question_attempted', []),
+                "noOfQuestions" : noOfQuestions,
+                "feedback" : user.get("personalized_feedback"),
+            }
+            print(user.get('question_attempted'))
+            return jsonify(user_data), 200
+
+    return jsonify({"error": "User not found for this quiz"}), 404
+
+
 
 @app.route('/api/leaderboard', methods=['GET'])
 def get_leaderboard():

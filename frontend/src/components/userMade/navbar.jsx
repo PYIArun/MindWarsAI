@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext'; // Adjust the path as necessary
 import {
     Avatar,
@@ -5,13 +6,18 @@ import {
     AvatarImage,
   } from "@/components/ui/avatar"
 
-  
+
 const Navbar = ({isAuthenticated, username, toggleLoginModal, handleLogout}) => {
+
+  const navigate = useNavigate();
+  const handleImageClick = ()=>{
+    navigate('/');
+  }
   return (
     <div className='flex justify-between items-center px-7 w-[100%] mx-auto bg-[#F2F3F3] h-[6vw] '>
     <div className='h-full w-full flex items-center gap-3'>
-      <img src="./images/mindwars.png" className='h-[50%]' alt="" />
-      <img className='h-[30%] ' src="https://see.fontimg.com/api/rf5/DGRW/MTNmYjZiN2U1NjRlNDM1MGE1OTgzOWRiZGFmMzgxNTIudHRm/TWluZFdhcnMgQWk/star-jedi.png?r=fs&h=81&w=1250&fg=0C0B0B&bg=FFFFFF&tb=1&s=65" alt="Star Wars fonts"/>
+      <img onClick={handleImageClick} src="./images/mindwars.png" className='hover:cursor-pointer h-[50%]' alt="" />
+      <img onClick={handleImageClick} className='h-[30%] hover:cursor-pointer ' src="https://see.fontimg.com/api/rf5/DGRW/MTNmYjZiN2U1NjRlNDM1MGE1OTgzOWRiZGFmMzgxNTIudHRm/TWluZFdhcnMgQWk/star-jedi.png?r=fs&h=81&w=1250&fg=0C0B0B&bg=FFFFFF&tb=1&s=65" alt="Star Wars fonts"/>
     </div>
 
     {isAuthenticated ? (

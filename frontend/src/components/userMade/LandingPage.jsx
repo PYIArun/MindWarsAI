@@ -42,14 +42,14 @@ const LandingPage = ({notify}) => {
       </div>
 
       <div className='w-[90%] pt-[2vw] mx-auto gap-[2vw] flex'>
-        <Button onClick={handleContestPage} className='rounded-2xl font-semibold px-[3vw] text-[1.5vw] py-[1.5vw] bg-[#F47F2F]'>Start Contest</Button>
+        <Button onClick={handleContestPage} className='rounded-full font-semibold px-[2vw] text-[1.5vw] py-[1.5vw] bg-[#F47F2F]'>Start Contest</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button className='rounded-2xl font-semibold px-[3vw] text-[1.5vw] py-[1.5vw] bg-[#F47F2F]'>How to Participate</Button>
+            <Button className='rounded-full font-semibold px-[2vw] text-[1.5vw] py-[1.5vw] bg-[#F47F2F]'>Learn More</Button>
           </SheetTrigger>
           <SheetContent className='w-[80vw]'>
             <SheetHeader>
-              <SheetTitle>How to Participate?</SheetTitle>
+              <SheetTitle>Learn More</SheetTitle>
               <SheetDescription>
                 Join the MindWars AI Quiz Contest: Compete with friends and other participants, answer AI-generated questions, and see how you rank!
               </SheetDescription>

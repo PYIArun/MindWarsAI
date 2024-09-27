@@ -12,6 +12,12 @@
         CardTitle,
     } from "@/components/ui/card"
 
+    import {
+        Tooltip,
+        TooltipContent,
+        TooltipProvider,
+        TooltipTrigger,
+      } from "@/components/ui/tooltip"
 
     import { Textarea } from '../ui/textarea';
     import { Button } from '../ui/button';
@@ -150,6 +156,10 @@
 
                         {battles && battles.length > 0 ? (
                             battles.map((battle, index) => (
+
+                                <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger className='w-full'>
                                 <Card key={index} onClick={handleLeaderBoard} className='flex flex-col p-[1vw] mb-[1vw] hover:cursor-pointer active:scale-[0.98] hover:scale-[0.99] transition-all duration-100 hover:bg-gray-50'>
                                     <div className='flex justify-end'>
                                         <div className='flex font-bold items-center justify-center'>
@@ -162,7 +172,7 @@
                                             <img className='h-[5vw]' src='./images/username.png' alt='User Avatar' />
                                             <h2>@{battle.username}</h2>
                                         </div>
-                                        <div>
+                                        <div className='flex flex-col items-start'>
                                             <h2 className='text-[2vw]'>{battle.title}</h2>
                                             <h2 className='text-[1.5vw]'>{battle.description}</h2>
                                             <h2 className='text-[1vw]'>No. of Questions: {battle.num_questions}</h2>
@@ -178,6 +188,15 @@
                                         }} className='bg-[#F47F2F] px-[1.5vw] py-[0.2vw] rounded-full'>Join</Button>
                                     </div>
                                 </Card>
+
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                <p>Click to see the leaderboard!</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            </TooltipProvider>
+
+                      
                             ))
                         ) : (
                             <Card className='flex justify-center items-center'>

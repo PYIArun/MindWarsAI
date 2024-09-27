@@ -12,7 +12,7 @@ import os
 from datetime import datetime, timedelta
 load_dotenv()
 
-# generating ai libraries
+# Generative AI libraries
 import google.generativeai as genai
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -28,7 +28,8 @@ app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
 # Secret key for JWT encoding/decoding
-SECRET_KEY = 'THEREISAKINGINSIDE'  # Replace with a strong secret key
+SECRET_KEY =  os.getenv('SECRET_KEY') 
+
 
 # Set up Educhain and the Gemini model
 gemini_flash = ChatGoogleGenerativeAI(
@@ -373,9 +374,10 @@ def get_user_score(quiz_id):
 
 
 
-@app.route('/api/leaderboard', methods=['GET'])
-def get_leaderboard():
+@app.route('/api/leaderboard/<quiz_id>', methods=['GET'])
+def get_leaderboard(quiz_id):
     leaderboard = mongo.db.quizzes.aggregate([
+        {"$match": {"quiz_id": quiz_id}},  # Filter by quiz_id
         {"$unwind": "$users_attempted"},
         {"$sort": {"users_attempted.score": -1}},
         {"$project": {
@@ -386,7 +388,6 @@ def get_leaderboard():
         }}
     ])
 
-    # Convert the cursor to a list and ensure ObjectId is serialized properly
     leaderboard_list = []
     for entry in leaderboard:
         leaderboard_list.append({

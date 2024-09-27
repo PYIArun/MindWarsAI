@@ -2,22 +2,28 @@ import { TbRefresh } from "react-icons/tb";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BiArrowBack } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "@/AuthContext";
 import { IoTimerOutline } from "react-icons/io5";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 
 const LeaderBoard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  const {quiz_id} = useParams();
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/leaderboard"
+          `http://localhost:5000/api/leaderboard/${quiz_id}`  // Include quiz_id in the API call
         );
         setLeaderboard(response.data);
       } catch (error) {
@@ -26,11 +32,11 @@ const LeaderBoard = () => {
     };
 
     fetchLeaderboard();
-  }, []);
+  }, [quiz_id]);
 
   const handleRefreshButton = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/leaderboard");
+      const response = await axios.get(`http://localhost:5000/api/leaderboard/${quiz_id}`);
       setLeaderboard(response.data);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
@@ -91,11 +97,11 @@ const LeaderBoard = () => {
                       <div className="w-[80%] flex gap-[1vw] font-bold flex-row items-center">
                         Rank {index + 1}
                         <div>
-                          <img
-                            className="h-[3vw]"
-                            src="./images/username.png"
-                            alt="User Avatar"
-                          />
+                        <Avatar className='h-[4vw] w-[4vw]'>
+                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+
                         </div>
                         <div className="flex items-center gap-[1vw]">
                           <h2 className="text-[2vw]">@{user.username}</h2>

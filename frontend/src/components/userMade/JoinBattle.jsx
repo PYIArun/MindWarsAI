@@ -1,5 +1,3 @@
-    import { Label } from '@radix-ui/react-label';
-    import { Input } from "@/components/ui/input"
     import { TbRefresh } from "react-icons/tb";
     import React, { useEffect, useState } from 'react'
 
@@ -19,6 +17,12 @@
         TooltipTrigger,
       } from "@/components/ui/tooltip"
 
+    import {
+        Avatar,
+        AvatarFallback,
+        AvatarImage,
+    } from "@/components/ui/avatar"
+      
     import { Textarea } from '../ui/textarea';
     import { Button } from '../ui/button';
     import { BiArrowBack } from "react-icons/bi";
@@ -80,18 +84,13 @@
         }
 
 
-
-        const handleLeaderBoard = ()=>{
-            
-            if(!isAuthenticated){
-                navigate('/');
+        const handleLeaderBoard = (quizId) => {
+            if (!isAuthenticated) {
+              navigate('/');
+            } else {
+              navigate(`/leaderboard/${quizId}`);
             }
-            else{
-                navigate('/leaderboard');
-            }
-
-        }
-
+          };
         const handleJoinButton = async (battleId) => {
 
 
@@ -160,16 +159,19 @@
                                 <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger className='w-full'>
-                                <Card key={index} onClick={handleLeaderBoard} className='flex flex-col p-[1vw] mb-[1vw] hover:cursor-pointer active:scale-[0.98] hover:scale-[0.99] transition-all duration-100 hover:bg-gray-50'>
-                                    <div className='flex justify-end'>
-                                        <div className='flex font-bold items-center justify-center'>
+                                <Card key={index} onClick={() => handleLeaderBoard(battle.id)} className='flex flex-col p-[1vw] mb-[1vw] hover:cursor-pointer active:scale-[0.98] hover:scale-[0.99] transition-all duration-100 hover:bg-gray-50'>
+                                    <div className='relative flex justify-end'>
+                                        <div className='absolute flex font-bold items-center justify-center'>
                                             <IoTimerOutline className='' />
                                             <h2>{battle.time || 'Time'}</h2>
                                         </div>
                                     </div>
                                     <div className='flex gap-[1vw] font-bold flex-row'>
-                                        <div>
-                                            <img className='h-[5vw]' src='./images/username.png' alt='User Avatar' />
+                                        <div className='flex flex-col gap-[0.7vw]'>
+                                        <Avatar className='h-[4vw] w-[4vw]'>
+                                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
                                             <h2>@{battle.username}</h2>
                                         </div>
                                         <div className='flex flex-col items-start'>

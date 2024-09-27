@@ -9,13 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { BiArrowBack } from "react-icons/bi";
@@ -33,7 +27,6 @@ const CreateBattle = () => {
     const [battleDescription, setBattleDescription] = useState('');
     const [numQuestions, setNumQuestions] = useState(5);
     const [timeLimit, setTimeLimit] = useState(30);
-    const [difficulty, setDifficulty] = useState(1);
     const [deadline, setDeadline] = useState(1);
 
     const {isAuthenticated} = useAuth();
@@ -191,7 +184,7 @@ const CreateBattle = () => {
                                     />
                                 </div>
 
-                                <Button type='submit'>Start</Button>
+                                <Button type='submit'>Create Quiz Contest</Button>
                             </form>
                         </CardContent>
                     </Card>

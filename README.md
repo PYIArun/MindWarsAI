@@ -16,7 +16,7 @@ MindWars AI is an AI-generated quiz contest platform that allows users to create
 
 ## Project Structure
 ```
-Fantastic Duo/
+MindWarsAI/
 │
 ├── Frontend/
 │   └── [React.js code]
@@ -47,7 +47,7 @@ Fantastic Duo/
 ### Backend Setup (Python Flask)
 1. Navigate to the `backend` directory:
    ```bash
-   cd Fantastic Duo/backend
+   cd MindWarsAI/backend
    ```
 2. **Environment Setup**:  
    Create an `.env` file with the following keys:

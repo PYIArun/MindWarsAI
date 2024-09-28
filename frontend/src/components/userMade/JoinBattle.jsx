@@ -132,7 +132,7 @@
                         <div className='w-[50%] h-full relative'>
                             <div onClick={handleBackButton} className='p-4 active:scale-105 rounded-full transition-all hoverease-in duration-150 hover:bg-gray-100 text-[2vw] absolute'><BiArrowBack/></div>
                             <div className='h-full justify-center flex flex-col items-center'>
-                            <h2 className="leading-[5vw] flex flex-col justify-center items-center text-[5vw] w-full font-bold text-[#3565EC]">Join the <span className='text-yellow-500'>Battle Arena.</span></h2>
+                            <h2 className="leading-[5vw] flex flex-col justify-center items-center text-[5vw] w-full font-bold text-[#3565EC]">Join the <span className='text-yellow-500'>Quiz Contest.</span></h2>
                             <p className='text-[1.5vw] font-semibold w-[65%] text-center'>Step into the action! Join the competitive quiz contest and prove your skills!</p>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                                 
                                 <CardHeader>
                                     <div className='flex justify-between items-center'>
-                                    <CardTitle className='text-[2vw]'>Active Battles to Join</CardTitle>
+                                    <CardTitle className='text-[2vw]'>Active Contests to Join</CardTitle>
                                     <TbRefresh onClick={handleRefreshButton} className='text-[2vw] active:scale-[0.9] rounded-full hover:bg-gray-100 p-1' />
                                     </div>
                                     <CardDescription>Click on the quiz card to see the contest leaderboard.</CardDescription>

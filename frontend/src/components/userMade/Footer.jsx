@@ -24,7 +24,7 @@ const Footer = () => {
             <div className="flex flex-col gap-1">
             <div className="">
               <HoverCard>
-              <HoverCardTrigger className="hover:underline flex gap-2 items-center"><FaGithub />Arun Chandra</HoverCardTrigger>
+              <HoverCardTrigger className="hover:underline flex gap-2 items-center"><a className="flex flex-row gap-[0.5vw] items-center" href='https://github.com/PYIArun' target="_blank"><FaGithub />Arun Chandra</a></HoverCardTrigger>
               <HoverCardContent>
               A creative thinker who loves coming up with solutions to tricky tech challenges
               </HoverCardContent>
@@ -33,7 +33,7 @@ const Footer = () => {
             </div>
             <div className="">
             <HoverCard>
-              <HoverCardTrigger className="hover:underline flex gap-2 items-center"><FaGithub />Ashish Sah</HoverCardTrigger>
+              <HoverCardTrigger className="hover:underline flex gap-2 items-center"><a className="flex flex-row gap-[0.5vw] items-center" href='https://github.com/ashishsah24' target="_blank"><FaGithub />Ashish Sah</a></HoverCardTrigger>
               <HoverCardContent>
               An explorer in the tech world who loves taking on challenges and learning along the way.
               </HoverCardContent>

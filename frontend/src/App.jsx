@@ -18,6 +18,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import LeaderBoard from './components/userMade/LeaderBoard';
 import QuizPage from './components/userMade/QuizPage';
 import ResultQuiz from './components/userMade/ResultQuiz';
+import Loading from './components/loading/Loading';
+
 const App = () => { 
   const { login, logout, isAuthenticated } = useAuth();
   const [identifier, setIdentifier] = useState('');
@@ -27,13 +29,17 @@ const App = () => {
   const [passwordSignup, setPasswordSignup] = useState('');
   const [loginValue, setLoginValue] = useState(false);
 
+  const [loading, setLoading] = useState(false); // Add loading state
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+        setLoading(true);
         const response = await axios.post('http://localhost:5000/login', {
-            identifier,
-            password: passwordLogin,
+          identifier,
+          password: passwordLogin,
         });
+        setLoading(false);
         alert(response.data.message);
         // Use the login function from context
         login(response.data.token, response.data.username); 
@@ -47,11 +53,13 @@ const App = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axios.post('http://localhost:5000/signup', {
         username,
         email,
         password: passwordSignup,
       });
+      setLoading(false);
       alert(response.data.message);
       setLoginValue(false);
     } catch (error) {
@@ -134,7 +142,12 @@ transition= {Bounce}
 
       {/*  */}
 
-
+      {loading && (
+                // Loading spinner overlay
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                    <Loading type="bars" color="#3565EC" />
+                </div>
+            )}
     {loginValue && 
     <LoginSignupModal handleLogin={handleLogin} 
         setPasswordLogin={setPasswordLogin} 

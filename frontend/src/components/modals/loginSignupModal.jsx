@@ -24,6 +24,7 @@ const LoginSignupModal = ({
   
   return (
     <>
+      
       <div
         onClick={() => setlogin(false)}
         className="h-screen w-screen flex items-center justify-center top-0 fixed bg-[#000000] bg-opacity-60 backdrop-blur-xl transition-all duration-500 animate-fadeIn "

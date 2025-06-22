@@ -102,4 +102,8 @@ Fantastic Duo/
 
 Make sure to run both servers simultaneously to fully experience the app.
 
+<<<<<<< HEAD
 Enjoy the competitive AI-driven quiz platform with MindWars AI!
+=======
+Enjoy the competitive AI-driven quiz platform with MindWars AI!
+>>>>>>> 4a5c59fe6eafe3c95544c2e126375a3c5d003790

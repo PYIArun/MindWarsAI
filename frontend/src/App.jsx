@@ -91,10 +91,7 @@ const App = () => {
       return<Navigate to="/" />
     }
     return element ;
-  };
-
-
-  
+  };  
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');

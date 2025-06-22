@@ -33,9 +33,11 @@ SECRET_KEY =  os.getenv('SECRET_KEY')
 
 # Set up Educhain and the Gemini model
 gemini_flash = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash-exp-0827",
+    model="gemini-2.5-flash",
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
+
+
 flash_config = LLMConfig(custom_model=gemini_flash)
 educhain_client = Educhain(flash_config)
 
@@ -147,10 +149,10 @@ def create_battle():
 
         )
         # print(quiz_questions)
-        print("Hello hello x2")
+        # print("Hello hello x2")
         print(vars(quiz_questions)) 
         print(type(quiz_questions))
-        print("Hello hello x2")
+        # print("Hello hello x2")
         # Create a unique ID and store quiz details
         quiz_id = str(uuid.uuid4())
         created_at = datetime.utcnow()

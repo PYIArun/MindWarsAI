@@ -1,109 +1,178 @@
-# MindWars AI - AI-Generated Quiz Contest Platform
+# 🧠 MindWars AI - AI-Generated Quiz Contest Platform
 
-MindWars AI is an AI-generated quiz contest platform that allows users to create, join, and compete in quiz contests. With a focus on interactive and user-friendly design, the platform provides a competitive environment where participants are ranked based on their quiz scores. Our primary goal is to enhance user experience by offering AI-driven quiz generation, real-time matchmaking, and personalized leaderboards for each contest.
+**MindWars AI** is a dynamic, AI-powered quiz contest platform that allows users to **create, join, and compete** in intelligent, interactive quizzes. Unlike traditional systems relying on static question banks, MindWars AI leverages **Generative AI** to create quizzes in real-time, assess performance instantly, and provide **personalized feedback** for improvement.
 
-## Key Features
-- **Create Quiz Contest**: Users can create custom AI-generated quiz contests by specifying the quiz topic, number of questions, and difficulty level.
-- **Join Quiz Contest**: Players can join live contests and compete against others in real-time.
-- **Leaderboard**: After each contest, a leaderboard displays the rankings based on quiz scores and time taken.
-- **User Authentication**: Sign up and log in with secure password hashing to ensure data privacy.
-- **Interactive UI**: Built with React.js, providing smooth navigation and an engaging user interface.
+Built using a modern full-stack architecture, MindWars AI empowers learners and quiz enthusiasts with a competitive, engaging, and insightful learning experience.
 
-## Tech Stack
-- **Frontend**: React.js
-- **Backend**: Python Flask
-- **Database**: MongoDB
+---
 
-## Project Structure
+## 🚀 Key Features
+
+* 🔐 **JWT Authentication** – Secure login/signup with hashed passwords using `bcrypt` and token-based session management.
+* 🧠 **AI-Generated Quizzes** – Quizzes are dynamically created using **Gemini AI** via Educhain based on topic, difficulty, and number of questions.
+* 📝 **Custom Battle Creation** – Users can set the topic, time, difficulty, and number of questions to host a quiz battle.
+* 🎯 **Live Contest Participation** – Players can join any active contest and attempt time-bound questions.
+* 📊 **Real-Time Leaderboard** – Rankings are calculated based on accuracy and time to foster competitiveness.
+* 📚 **Personalized Feedback** – After submission, AI suggests a learning path tailored to the user’s weak areas.
+* 💻 **Responsive Design** – Built with React.js and Tailwind CSS to offer a smooth user experience across devices.
+
+---
+
+## 🧩 Tech Stack
+
+| Layer    | Tech Used                           |
+| -------- | ----------------------------------- |
+| Frontend | React.js, Tailwind CSS              |
+| Backend  | Flask (Python), Flask-CORS, JWT     |
+| AI Layer | Google Gemini + Educhain            |
+| Database | MongoDB (users, quizzes, responses) |
+| Hosting  | Vercel (frontend), Render (backend) |
+
+---
+
+## 📁 Project Structure
+
 ```
-Fantastic Duo/
-│
-├── Frontend/
-│   └── [React.js code]
-│
-└── Backend/
-    ├── .env  # Environment variables like API keys, MongoDB URI, and secret key
-    ├── app.py  # Flask routes and AI logic
-    └── requirements.txt  # Python dependencies
+MindWarsAI/
+├── frontend/              # React + Tailwind UI
+├── backend/
+│   ├── app.py            # Main Flask backend
+│   ├── .env              # Environment variables
+│   └── requirements.txt  # Python dependencies
+└── README.md
 ```
 
-## Installation Guide
+---
 
-### Frontend Setup (React.js)
-1. Navigate to the `frontend` directory:
-   ```bash
-   cd Fantastic Duo/frontend
-   ```
-2. Install the required dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the React development server:
-   ```bash
-   npm run dev
-   ```
-   Make sure the frontend server runs on a specific port (e.g., `localhost:3000`).
+## ⚙️ Installation Guide
 
-### Backend Setup (Python Flask)
-1. Navigate to the `backend` directory:
-   ```bash
-   cd Fantastic Duo/backend
-   ```
-2. **Environment Setup**:  
-   Create an `.env` file with the following keys:
-   - `MONGO_URI`: Your MongoDB Atlas connection string. The MONGO_URI, for e.g ( mongodb+srv://ashishsah11110112:<db_password>@userauthcluster.fvhu1.mongodb.net/<db_name>) 
-   - Then, under the mongodb database <db_name> : You'll have to create two collections
-   -  i) users
-   -  ii) quizzes
+### 1. Clone the Repository
 
-   - `OPENAI_API_KEY`: Generate this from [Google AI Studio](https://ai.google.dev/aistudio).
-   - `SECRET_KEY`: A custom secret key for session management (e.g., `mysecretkey123`).
+```bash
+git clone https://github.com/your-username/MindWarsAI.git
+cd MindWarsAI
+```
 
-   Example `.env` file:
-   ```env
-   MONGO_URI="your-mongo-uri-here"
-   OPENAI_API_KEY="your-google-api-key-here"
-   SECRET_KEY="your-secret-key"
-   ```
+---
 
-3. Create a virtual environment:
-   ```bash
-   python -m venv env
-   ```
-4. Activate the virtual environment:
-   - On Windows:
-     ```bash
-     env\Scripts\activate
-     ```
-   - On macOS/Linux:
-     ```bash
-     source env/bin/activate
-     ```
+### 2. Frontend Setup (React.js)
 
-5. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-6. Run the Flask backend server:
-   ```bash
-   flask run
-   ```
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-### Running the Application
-- Ensure both the frontend (React) and backend (Flask) servers are running.
-- Once the servers are up and running, open the frontend URL (e.g., `http://localhost:3000`) in your browser to interact with the application.
+> Frontend will typically run on `http://localhost:3000`
 
-## Additional Information
+---
 
-### Backend File Breakdown:
-- **`.env`**: Contains environment-specific configuration, such as database connection strings and API keys.
-- **`app.py`**: The main backend logic, including routes for quiz creation, user authentication, leaderboard fetching, and AI-based quiz generation.
-- **`requirements.txt`**: Lists the Python libraries and their specific versions required for Flask to function correctly. Key dependencies include Flask, Flask-CORS, and pymongo.
+### 3. Backend Setup (Python + Flask)
 
-Make sure to run both servers simultaneously to fully experience the app.
+```bash
+cd ../backend
+python -m venv env
+# Activate virtual environment
+# Windows
+env\Scripts\activate
+# macOS/Linux
+source env/bin/activate
 
-<<<<<<< HEAD
-Enjoy the competitive AI-driven quiz platform with MindWars AI!
-=======
-Enjoy the competitive AI-driven quiz platform with MindWars AI!
->>>>>>> 4a5c59fe6eafe3c95544c2e126375a3c5d003790
+# Install dependencies
+pip install -r requirements.txt
+```
+
+#### Create a `.env` File
+
+```env
+MONGO_URI="mongodb+srv://<username>:<password>@cluster.mongodb.net/<db_name>"
+OPENAI_API_KEY="your-google-gemini-api-key"
+SECRET_KEY="your-secret-key"
+```
+
+> Ensure your MongoDB database has two collections:
+> * `users`
+> * `quizzes`
+
+Then start the backend:
+
+```bash
+flask run
+```
+
+> Backend will run on `http://localhost:5000` by default
+
+---
+
+### 4. Run the Application
+
+Ensure both frontend and backend servers are running.
+
+Visit:
+🔗 `http://localhost:3000`
+
+---
+
+## 🧪 Database Overview [Logical View]
+
+* **Users**
+
+  * `username`, `email`, `password`
+* **Quizzes**
+
+  * `quiz_id`, `quiz_name`, `description`, `difficulty`, `time_limit`, `creator_username`, `created_at`, `deadline`
+* **Questions**
+
+  * `quiz_id`, `question`, `options`, `correct_answer`, `explanation`
+* **Users Attempted**
+
+  * `quiz_id`, `username`, `score`, `time_completion`, `personalized_feedback`
+
+---
+
+## 🧾 Use Case Flow
+
+* **Sign Up / Login** → Register securely with hashed passwords.
+* **Create Battle** → Enter quiz metadata → AI generates questions.
+* **Join Battle** → Select available contest → Start timer.
+* **Attempt Quiz** → Answer time-bound questions.
+* **Submit Quiz** → Score calculated → AI generates learning path.
+* **View Leaderboard** → Sorted rankings displayed for each contest.
+
+---
+
+## 🧠 Edge Case Handling
+
+| Edge Case                      | Handling Strategy                 |
+| ------------------------------ | --------------------------------- |
+| Access without login           | Toast + redirect to login         |
+| Invalid login credentials      | Return 401 Unauthorized           |
+| JWT expired or missing         | Redirect + message                |
+| Quiz not found                 | Return 404 with friendly UI       |
+| Duplicate submission           | Block and notify user             |
+| AI API timeout                 | Fallback message + error log      |
+| Skipped questions              | Score based on attempted only     |
+| Expired quiz attempt           | Block with "Quiz expired" message |
+| Multiple attempts by same user | Check and prevent reattempt       |
+
+---
+
+## 🔮 Future Enhancements
+
+* 📈 **User Dashboard** with history of attempts, scores, and feedback.
+* 👥 **Real-Time Multi-Player Battles** with live countdown and rankings.
+* 🔍 **Topic Categories & Filters** (e.g., Tech, Science, Current Affairs).
+* 🛠 **Admin Panel** for quiz moderation and user management.
+
+---
+
+## 📚 References
+* [Flask Docs](https://flask.palletsprojects.com/)
+* [MongoDB Docs](https://www.mongodb.com/docs/)
+* [React Docs](https://reactjs.org/)
+* [Educhain + Gemini AI](https://ai.google.dev/)
+* [Vercel Deployment](https://vercel.com/)
+* [Render Deployment](https://render.com/)
+
+---
+### Enjoy the competitive, AI-powered quiz experience with **MindWars AI**! 🧠✨
